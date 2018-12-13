@@ -12,7 +12,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class Controller implements Initializable {
+public class MainController implements Initializable {
     @FXML
     private TextField searchTerm;
     @FXML
@@ -28,7 +28,7 @@ public class Controller implements Initializable {
     private Explorer explorer;
     private File searchRoot = new File(System.getProperty("user.home"));
 
-    public Controller() {
+    public MainController() {
         explorer = new Explorer();
     }
 

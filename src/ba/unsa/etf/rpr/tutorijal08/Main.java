@@ -17,7 +17,7 @@ public class Main extends Application {
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
 
-        Controller controller = loader.getController();
+        MainController controller = loader.getController();
         primaryStage.setOnCloseRequest(event -> controller.endExploring());
     }
 

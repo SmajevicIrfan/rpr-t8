@@ -1,0 +1,7 @@
+.validField {
+    -fx-text-box-border: green;
+}
+
+.invalidField {
+    -fx-text-box-border: red;
+}

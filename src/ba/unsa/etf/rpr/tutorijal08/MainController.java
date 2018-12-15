@@ -39,7 +39,7 @@ public class MainController implements Initializable {
         this.listOfItems.getItems().clear();
         this.startSearch.setDisable(true);
         this.endSearch.setDisable(false);
-        progressIndicator.setVisible(true);
+        this.progressIndicator.setVisible(true);
 
         Thread searchThread = new Thread(explorer);
         searchThread.start();
@@ -50,7 +50,7 @@ public class MainController implements Initializable {
 
         this.startSearch.setDisable(false);
         this.endSearch.setDisable(true);
-        progressIndicator.setVisible(false);
+        this.progressIndicator.setVisible(false);
     }
 
     private class Explorer implements Runnable {
@@ -71,7 +71,7 @@ public class MainController implements Initializable {
 
             assert children != null;
             for (File child : children) {
-                if (!running) {
+                if (!this.running) {
                     return;
                 }
 

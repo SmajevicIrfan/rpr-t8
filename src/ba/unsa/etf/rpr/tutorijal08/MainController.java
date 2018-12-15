@@ -1,6 +1,7 @@
 package ba.unsa.etf.rpr.tutorijal08;
 
 import javafx.application.Platform;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -20,26 +21,21 @@ public class MainController implements Initializable {
     @FXML
     private Button endSearch;
     @FXML
-    private ListView<String> listOfItems;
+    private ListView<File> listOfItems;
 
     @FXML
     private ProgressIndicator progressIndicator;
 
-    private Explorer explorer;
-    private File searchRoot = new File(System.getProperty("user.home"));
-
-    public MainController() {
-        explorer = new Explorer();
-    }
+    private final Explorer explorer = new Explorer();
+    private final File searchRoot = new File(System.getProperty("user.home"));
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        startSearch.setOnAction(event -> this.startExploring());
-
-        endSearch.setOnAction(event -> this.endExploring());
+        startSearch.setOnAction(this::startExploring);
+        endSearch.setOnAction(this::endExploring);
     }
 
-    private void startExploring() {
+    private void startExploring(Event event) {
         this.listOfItems.getItems().clear();
         this.startSearch.setDisable(true);
         this.endSearch.setDisable(false);
@@ -49,12 +45,12 @@ public class MainController implements Initializable {
         searchThread.start();
     }
 
-    void endExploring() {
+    void endExploring(Event event) {
+        explorer.stop();
+
         this.startSearch.setDisable(false);
         this.endSearch.setDisable(true);
         progressIndicator.setVisible(false);
-
-        explorer.stop();
     }
 
     private class Explorer implements Runnable {
@@ -71,18 +67,18 @@ public class MainController implements Initializable {
         }
 
         private void findAllIn(String searchTerm, File parent) {
-            if (!running) {
-                return;
-            }
-
             File[] children = parent.listFiles();
 
             assert children != null;
             for (File child : children) {
+                if (!running) {
+                    return;
+                }
+
                 if (child.isDirectory()) {
                     findAllIn(searchTerm, child);
                 } else if (child.getName().contains(searchTerm)) {
-                    Platform.runLater(() -> listOfItems.getItems().add(child.getAbsolutePath()));
+                    Platform.runLater(() -> listOfItems.getItems().add(child));
                 }
 
                 try {
@@ -93,8 +89,7 @@ public class MainController implements Initializable {
             }
 
             if (parent.equals(searchRoot)) {
-                endExploring();
-                this.stop();
+                endExploring(null);
             }
         }
     }
